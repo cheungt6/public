@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+   mail:
+     build:
+       context: Dockerfile
+       dockerfile: Dockerfile
+       args:
+        SMF_EMAILDOMAIN: 'yourdomain.com'
+     container_name: mail
+     ports:
+       - 25:25
+       - 110:110
+       - 995:995
+       - 993:993
+       - 143:143
+       - 465:465
+       - 587:587
+       - 4190:4190
+     restart: always
+     volumes:
+       - ./ssl_certs/smtp.key:/etc/postfix/cert/smtp.key
+       - ./ssl_certs/smtp.cert:/etc/postfix/cert/smtp.cert
+       - ./dkim/:/etc/opendkim/keys/
+     environment:
+        SMF_CONFIG: 'yourdomain.com:your@email.com'
+        SMF_DOMAIN: 'yourdomain.com'

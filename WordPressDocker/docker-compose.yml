@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+   db:
+     image: mysql:5.7
+     container_name: db
+     restart: always
+     volumes:
+       - ./blogsite_db:/var/lib/mysql
+     environment:
+       MYSQL_ROOT_PASSWORD: rootpassword
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: admin
+       MYSQL_PASSWORD: password
+
+   site:
+     image: wordpress:5.2.3-php7.3-fpm-alpine
+     container_name: site
+     depends_on:
+       - db
+     restart: always
+     working_dir: /var/www/html/site
+     volumes:
+       - ./php-uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+       - ./site_wp:/var/www/html/site
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: admin
+       WORDPRESS_DB_PASSWORD: password
+
+   web:
+     image: pagespeed/nginx-pagespeed
+     container_name: web
+     depends_on:
+       - site
+     restart: always
+     volumes:
+       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+       - ./sites-available:/etc/nginx/sites-available
+       - ./blogsite_wp:/var/www/html/site
+       - ./logs:/var/log/nginx
+
+   https:
+     image: steveltn/https-portal:1
+     container_name: https
+     depends_on:
+       - web
+     ports:
+       - 80:80
+       - 443:443
+     restart: always
+     volumes:
+       - ./ssl_certs:/var/lib/https-portal
+     environment:
+       DOMAINS: 'www.yourdomain.com -> http://web:80 #production'
+       CLIENT_MAX_BODY_SIZE: 64M
+
