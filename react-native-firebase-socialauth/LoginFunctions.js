@@ -23,6 +23,28 @@ const LoginFunctions = {
     );
   },
 
+  registerOrLink: async function (provider, credential, email) {
+    this.saveCredential(provider, credential)
+    let user = await auth().createUserWithEmailAndPassword(credential.token, credential.secret).catch(
+      async (error) => {
+        try {
+          if (error.code != "auth/email-already-in-use") {
+            let a = 1;
+            throw error;
+          }
+          let methods = await auth().fetchSignInMethodsForEmail(email);
+          let oldCred = await this.getCredential(methods[0]);
+          let prevUser = await auth().signInWithCredential(oldCred);
+          auth().currentUser.linkWithCredential(credential);
+        }
+        catch (error) {
+          throw error;
+        }
+      }
+    );
+    await user.sendEmailVerification();
+  },
+
   getCredential: async function (provider) {
     try {
       let value = await AsyncStorage.getItem(provider);
@@ -56,6 +78,8 @@ const LoginFunctions = {
         return auth.FacebookAuthProvider;
       case auth.TwitterAuthProvider.PROVIDER_ID:
         return auth.TwitterAuthProvider;
+      case auth.EmailAuthProvider.PROVIDER_ID:
+        return auth.EmailAuthProvider;
       default:
         throw new Error(`No provider implemented for ${providerId}`);
     }
