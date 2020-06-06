@@ -29,7 +29,6 @@ const LoginFunctions = {
       async (error) => {
         try {
           if (error.code != "auth/email-already-in-use") {
-            let a = 1;
             throw error;
           }
           let methods = await auth().fetchSignInMethodsForEmail(email);

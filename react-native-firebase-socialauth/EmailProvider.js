@@ -103,7 +103,7 @@ export default class EmailProvider extends Component {
 async function onEmailSigninButtonPress(email, password, checkValidEmail) {
 
   try {
-    if (!checkValidEmail(loginHandler, email)) {
+    if (!checkValidEmail(email)) {
       return;
     }
     let credential = await auth().signInWithEmailAndPassword(email, password);
@@ -115,13 +115,13 @@ async function onEmailSigninButtonPress(email, password, checkValidEmail) {
   }
 }
 
-async function onEmailRegisterButtonPress(loginHandler, email, password, password2,
+async function onEmailRegisterButtonPress(email, password, password2,
   checkValidEmail, checkPasswordValid) {
   try {
-    if (!checkValidEmail(loginHandler, email)) {
+    if (!checkValidEmail(email)) {
       return;
     }
-    if (!checkPasswordValid(loginHandler, password, password2)) {
+    if (!checkPasswordValid(password, password2)) {
       return;
     }
 
