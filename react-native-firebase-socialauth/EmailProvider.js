@@ -106,8 +106,7 @@ async function onEmailSigninButtonPress(email, password, checkValidEmail) {
     if (!checkValidEmail(email)) {
       return;
     }
-    let credential = await auth().signInWithEmailAndPassword(email, password);
-
+    let credential = auth.EmailAuthProvider.credential(email, password);
     return LoginFunctions.signInOrLink(auth.EmailAuthProvider.PROVIDER_ID, credential, email);
   }
   catch (error) {
