@@ -4,3 +4,5 @@ You can find various snippets available for educational purposes in this repo:
 Docker-compose files to allow you to spin up a wordpress site with https
 ### Simple Mail Forwarder DKIM
 Attempt at using docker-compose to spin up Zixia's Simple Mail Forwarder with added DKIM signing on top
+### React Native Firebase Social Auth
+React Native samples on how to sign up users using Firebase's social auth and email/password signup
