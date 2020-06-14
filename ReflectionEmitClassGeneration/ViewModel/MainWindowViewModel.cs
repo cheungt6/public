@@ -3,7 +3,8 @@ using ReflectionEmitClassGeneration.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ReflectionEmitClassGeneration.ViewModel
@@ -14,17 +15,22 @@ namespace ReflectionEmitClassGeneration.ViewModel
         private Type _itemType;
         private Dictionary<string, Type> _properties;
         private string _newPropertyName;
+        private TypeGeneratorGeneric<ItemViewModelBase> _typeGenerator;
+
+        private static object _feedLock = new object();
+        private bool _feedRunning;
 
         public MainWindowViewModel()
         {
-            GenerateItemCommand = new GenericCommand(GenerateItem, obj =>
+            GenerateItemCommand = new GenericCommand(GenerateItems, obj =>
             {
                 return !string.IsNullOrEmpty(obj?.ToString()) &&
                 !_properties.ContainsKey(obj.ToString());
             });
             _properties = new Dictionary<string, Type>();
             _newPropertyName = "Id";
-            GenerateItem();
+            GenerateItems();
+            StartDataFeed();
         }
 
         public IList Items
@@ -33,17 +39,6 @@ namespace ReflectionEmitClassGeneration.ViewModel
             set
             {
                 items = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Type ItemType
-        {
-            get => _itemType;
-            set
-            {
-                _itemType = value;
-
                 NotifyPropertyChanged();
             }
         }
@@ -60,27 +55,42 @@ namespace ReflectionEmitClassGeneration.ViewModel
             }
         }
 
-        public void GenerateItem()
+        public void GenerateItems()
         {
             _properties.Add(NewPropertyName, typeof(int));
             NewPropertyName = null;
-            var typeGenerator = new TypeGeneratorGeneric<ItemViewModelBase>(_properties);
-            ItemType = typeGenerator.GeneratedType;
+            _typeGenerator = new TypeGeneratorGeneric<ItemViewModelBase>(_properties);
             var items = new List<ItemViewModelBase>();
-
             for (var i = 0; i < 10; i++)
             {
-                var newObject = typeGenerator.CreateInstance(new Dictionary<string, object> { { "Id", i } });
+                var newObject = _typeGenerator.CreateInstance(new Dictionary<string, object> { { "Id", i } });
                 items.Add(newObject);
-                if (_properties.Count > 1)
+            }
+
+            Items = _typeGenerator.CreateList(items.ToArray());
+        }
+
+        private async void StartDataFeed()
+        {
+            _feedRunning = true;
+            while (_feedRunning)
+            {
+                await Task.Delay(500);
+                if (_properties.Count() == 1) continue;
+                lock (_feedLock)
                 {
-                    var data = GetRandomData();
-                    typeGenerator.SetValues(newObject, data);
+                    foreach (var item in Items)
+                    {
+                        var data = GetRandomData();
+                        var vm = item as ItemViewModelBase;
+                        _typeGenerator.SetValues(vm, data);
+                        foreach (var property in _properties)
+                            vm.NotifyPropertyChanged(property.Key);
+
+
+                    }
                 }
             }
-            Items = typeGenerator.CreateList(items.ToArray());
-
-
         }
 
         private Dictionary<string, object> GetRandomData()
@@ -94,6 +104,12 @@ namespace ReflectionEmitClassGeneration.ViewModel
 
             }
             return valuesDict;
+        }
+
+        ~MainWindowViewModel()
+        {
+            lock (_feedLock)
+                _feedRunning = false;
         }
     }
 }
