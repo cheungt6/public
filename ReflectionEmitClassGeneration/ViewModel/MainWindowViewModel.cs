@@ -12,7 +12,6 @@ namespace ReflectionEmitClassGeneration.ViewModel
     public class MainWindowViewModel : ViewModelBase
     {
         private IList items;
-        private Type _itemType;
         private Dictionary<string, Type> _properties;
         private string _newPropertyName;
         private TypeGeneratorGeneric<ItemViewModelBase> _typeGenerator;
