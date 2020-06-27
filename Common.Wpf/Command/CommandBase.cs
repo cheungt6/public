@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ReflectionEmitClassGeneration.Command
+namespace Common.Wpf.Command
 {
     public abstract class CommandBase : ICommand
     {

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflectionEmitClassGeneration", "ReflectionEmitClassGeneration.csproj", "{18A83D6A-D546-46A7-9D11-93B003A4F020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReflectionEmitClassGeneration", "ReflectionEmitClassGeneration.csproj", "{18A83D6A-D546-46A7-9D11-93B003A4F020}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Wpf", "..\Common.Wpf\Common.Wpf.csproj", "{28D09CD8-3BA5-45D6-A81A-09FC5CF37E8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{18A83D6A-D546-46A7-9D11-93B003A4F020}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18A83D6A-D546-46A7-9D11-93B003A4F020}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18A83D6A-D546-46A7-9D11-93B003A4F020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D09CD8-3BA5-45D6-A81A-09FC5CF37E8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D09CD8-3BA5-45D6-A81A-09FC5CF37E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D09CD8-3BA5-45D6-A81A-09FC5CF37E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D09CD8-3BA5-45D6-A81A-09FC5CF37E8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,12 @@
-﻿using ReflectionEmitClassGeneration.Command;
-using ReflectionEmitClassGeneration.Types;
+﻿using ReflectionEmitClassGeneration.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Common.Wpf.Command;
+using Common.Wpf.ViewModel;
 
 namespace ReflectionEmitClassGeneration.ViewModel
 {
@@ -71,7 +72,8 @@ namespace ReflectionEmitClassGeneration.ViewModel
 
         private async void StartDataFeed()
         {
-            _feedRunning = true;
+            lock (_feedLock)
+                _feedRunning = true;
             while (_feedRunning)
             {
                 await Task.Delay(500);

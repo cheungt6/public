@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Processors\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common.Wpf\Common.Wpf.csproj" />
   </ItemGroup>
+
 </Project>

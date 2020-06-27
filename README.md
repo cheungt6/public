@@ -8,3 +8,5 @@ Attempt at using docker-compose to spin up Zixia's Simple Mail Forwarder with ad
 React Native samples on how to sign up users using Firebase's social auth and email/password signup
 ### Reflection.Emit Class Generation
 C# .NET Core code and sample WPF app showing how to generate a new type at runtime using Reflection.Emit
+### TPL Dataflow Processing Pipeline
+C# .NET Core app to demo functionality of the TPL Dataflow library for parallel data processing

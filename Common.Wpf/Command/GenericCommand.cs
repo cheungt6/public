@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ReflectionEmitClassGeneration.Command
+namespace Common.Wpf.Command
 {
     public class GenericCommand : CommandBase
     {

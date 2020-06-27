@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Common.Wpf.ViewModel;
 
 namespace ReflectionEmitClassGeneration.ViewModel
 {
