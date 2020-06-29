@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodel="clr-namespace:TPLDataflowProcessing.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="900">
+        Title="TPL Dataflow Processing" Height="450" Width="900">
     <Window.DataContext>
         <viewmodel:MainWindowViewModel/>
     </Window.DataContext>
@@ -22,10 +22,10 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0"
                Grid.Column="0"
-               Content="Feed"/>
+               Content="Feed Log"/>
         <Label Grid.Row="0"
                Grid.Column="1"
-               Content="10 Update Intervals"/>
+               Content="5 Update Intervals"/>
         <Label Grid.Row="0"
                Grid.Column="2"
                Content="1 Second Intervals"/>

@@ -8,6 +8,7 @@ using Common.Wpf.Command;
 using Common.Wpf.ViewModel;
 using static TPLDataflowProcessing.Model.MockPriceFeed;
 using System.Threading.Tasks.Dataflow;
+using System.Timers;
 
 namespace TPLDataflowProcessing.ViewModel
 {
@@ -35,7 +36,10 @@ namespace TPLDataflowProcessing.ViewModel
 
         private void Init()
         {
+            _bufferBlock = new BufferBlock<PriceEventArgs>();
             _broadcastBlock = new BroadcastBlock<PriceEventArgs>(e => e);
+            _bufferBlock.LinkTo(_broadcastBlock);
+
             foreach (var stock in _stocks)
             {
                 var feed = new MockPriceFeed(stock);
@@ -52,7 +56,7 @@ namespace TPLDataflowProcessing.ViewModel
         {
             foreach (var feed in _priceFeeds)
             {
-                var batchBlock = new BatchBlock<PriceEventArgs>(10);
+                var batchBlock = new BatchBlock<PriceEventArgs>(5);
                 var actionBlock = new ActionBlock<PriceEventArgs[]>(e =>
                 {
                     var average = e.Average(v => v.Price);
@@ -72,9 +76,8 @@ namespace TPLDataflowProcessing.ViewModel
             foreach (var feed in _priceFeeds)
             {
                 var batchBlock = new BatchBlock<PriceEventArgs>(10000);
-                var timeOut = TimeSpan.FromSeconds(1);
-                var timeOutTimer = new System.Timers.Timer(timeOut.TotalMilliseconds);
-                timeOutTimer.Elapsed += (s, e) => batchBlock.TriggerBatch();
+                var intervalTimer = new Timer(1000);
+                intervalTimer.Elapsed += (s, e) => batchBlock.TriggerBatch();
 
                 var updateUILatestPrice = new ActionBlock<PriceEventArgs[]>(e =>
                 {
@@ -89,7 +92,7 @@ namespace TPLDataflowProcessing.ViewModel
 
                 _broadcastBlock.LinkTo(batchBlock, p => p.Name == feed.Key);
                 batchBlock.LinkTo(updateUILatestPrice);
-                timeOutTimer.Start();
+                intervalTimer.Start();
             }
         }
 
@@ -145,6 +148,7 @@ namespace TPLDataflowProcessing.ViewModel
         public GenericCommand StopFeedsCommand { get; set; }
         
         private BroadcastBlock<PriceEventArgs> _broadcastBlock;
+        private BufferBlock<PriceEventArgs> _bufferBlock;
 
         private ObservableCollection<string> _updateLog;
         public ObservableCollection<string> UpdateLog 
@@ -183,7 +187,7 @@ namespace TPLDataflowProcessing.ViewModel
 
         private void Feed_OnNextPricePublished(MockPriceFeed sender, PriceEventArgs e)
         {
-            _broadcastBlock.Post(e);
+            _bufferBlock.Post(e);
         }
 
         ~MainWindowViewModel()

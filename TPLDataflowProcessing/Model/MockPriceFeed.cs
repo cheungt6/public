@@ -45,7 +45,7 @@ namespace TPLDataflowProcessing.Model
 
             while (_isRunning)
             {
-                _lastPrice = Math.Abs(_lastPrice + (_rand.Next(-5, 5) / 10m));
+                _lastPrice = Math.Abs(_lastPrice + (_rand.Next(-5, 5) / 100m));
                 var priceObj = new PriceEventArgs(FeedName, _lastPrice);
                 OnNextPricePublished(this, priceObj);
                 await Task.Delay(100);
